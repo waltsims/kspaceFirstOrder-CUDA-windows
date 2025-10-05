@@ -84,9 +84,6 @@
     <RootNamespace>k_wave_fluid_cuda</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <PropertyGroup>
-    <VCToolsVersion Condition="'$(VCToolsVersion)' == ''">14.36.32532</VCToolsVersion>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -105,6 +102,14 @@
     </UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <PreferredCudaVCToolsVersion>14.38.33130</PreferredCudaVCToolsVersion>
+    <FallbackCudaVCToolsVersion>14.29.30133</FallbackCudaVCToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VCToolsVersion Condition="'$(VCToolsVersion)' == '' and Exists('$(VCInstallDir)Tools\\MSVC\\$(PreferredCudaVCToolsVersion)\\bin\\Hostx64\\x64\\cl.exe')">$(PreferredCudaVCToolsVersion)</VCToolsVersion>
+    <VCToolsVersion Condition="'$(VCToolsVersion)' == '' and Exists('$(VCInstallDir)Tools\\MSVC\\$(FallbackCudaVCToolsVersion)\\bin\\Hostx64\\x64\\cl.exe')">$(FallbackCudaVCToolsVersion)</VCToolsVersion>
+  </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props" Condition="exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props')" />
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props" Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props') and exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props')" />
