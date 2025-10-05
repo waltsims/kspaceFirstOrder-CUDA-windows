@@ -84,6 +84,9 @@
     <RootNamespace>k_wave_fluid_cuda</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <VCToolsVersion Condition="'$(VCToolsVersion)' == ''">14.36.32532</VCToolsVersion>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -154,7 +157,6 @@
       <PtxAsOptionV>true</PtxAsOptionV>
       <FastMath>true</FastMath>
       <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;</CodeGeneration>
-      <AdditionalCompilerOptions>%(AdditionalCompilerOptions) -allow-unsupported-compiler</AdditionalCompilerOptions>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -185,7 +187,6 @@
       <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;</CodeGeneration>
       <FastMath>true</FastMath>
       <MaxRegCount />
-      <AdditionalCompilerOptions>%(AdditionalCompilerOptions) -allow-unsupported-compiler</AdditionalCompilerOptions>
     </CudaCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
