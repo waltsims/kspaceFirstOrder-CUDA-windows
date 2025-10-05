@@ -154,8 +154,7 @@
       <PtxAsOptionV>true</PtxAsOptionV>
       <FastMath>true</FastMath>
       <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;</CodeGeneration>
-      <AdditionalCompilerOptions>
-      </AdditionalCompilerOptions>
+      <AdditionalCompilerOptions>%(AdditionalCompilerOptions) -allow-unsupported-compiler</AdditionalCompilerOptions>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -186,6 +185,7 @@
       <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;</CodeGeneration>
       <FastMath>true</FastMath>
       <MaxRegCount />
+      <AdditionalCompilerOptions>%(AdditionalCompilerOptions) -allow-unsupported-compiler</AdditionalCompilerOptions>
     </CudaCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
