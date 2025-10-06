@@ -110,6 +110,9 @@
     <VCToolsVersion Condition="'$(VCToolsVersion)' == '' and Exists('$(VCInstallDir)Tools\\MSVC\\$(PreferredCudaVCToolsVersion)\\bin\\Hostx64\\x64\\cl.exe')">$(PreferredCudaVCToolsVersion)</VCToolsVersion>
     <VCToolsVersion Condition="'$(VCToolsVersion)' == '' and Exists('$(VCInstallDir)Tools\\MSVC\\$(FallbackCudaVCToolsVersion)\\bin\\Hostx64\\x64\\cl.exe')">$(FallbackCudaVCToolsVersion)</VCToolsVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <CudaNvccAllowUnsupportedCompiler Condition="'$(VCToolsVersion)' != '' and $([System.Version]::Parse('$(VCToolsVersion)')).CompareTo($([System.Version]::Parse('14.39.0.0'))) &gt; 0">-allow-unsupported-compiler</CudaNvccAllowUnsupportedCompiler>
+  </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props" Condition="exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props')" />
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props" Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props') and exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props')" />
@@ -162,6 +165,7 @@
       <PtxAsOptionV>true</PtxAsOptionV>
       <FastMath>true</FastMath>
       <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;</CodeGeneration>
+      <AdditionalCompilerOptions>%(AdditionalCompilerOptions) $(CudaNvccAllowUnsupportedCompiler)</AdditionalCompilerOptions>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -192,6 +196,7 @@
       <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;</CodeGeneration>
       <FastMath>true</FastMath>
       <MaxRegCount />
+      <AdditionalCompilerOptions>%(AdditionalCompilerOptions) $(CudaNvccAllowUnsupportedCompiler)</AdditionalCompilerOptions>
     </CudaCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
