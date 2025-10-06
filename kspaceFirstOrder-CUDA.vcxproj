@@ -111,8 +111,16 @@
     <VCToolsVersion Condition="'$(VCToolsVersion)' == '' and Exists('$(VCInstallDir)Tools\\MSVC\\$(FallbackCudaVCToolsVersion)\\bin\\Hostx64\\x64\\cl.exe')">$(FallbackCudaVCToolsVersion)</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <CudaNvccAllowUnsupportedCompiler Condition="'$(VCToolsVersion)' != '' and $([System.Version]::Parse('$(VCToolsVersion)')).CompareTo($([System.Version]::Parse('14.39.0.0'))) &gt; 0">-allow-unsupported-compiler</CudaNvccAllowUnsupportedCompiler>
+    <CudaNvccAllowUnsupportedCompiler>
+    </CudaNvccAllowUnsupportedCompiler>
   </PropertyGroup>
+  <Choose>
+    <When Condition="'$(VCToolsVersion)' != '' and $([MSBuild]::VersionGreaterThan('$(VCToolsVersion)', '14.39.0'))">
+      <PropertyGroup>
+        <CudaNvccAllowUnsupportedCompiler>-allow-unsupported-compiler</CudaNvccAllowUnsupportedCompiler>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props" Condition="exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props')" />
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props" Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props') and exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props')" />
@@ -203,5 +211,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.targets" Condition="exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.targets')" />
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.targets" Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.targets') and exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.targets')" />
-  </ImportGroup>
+</ImportGroup>
 </Project>
