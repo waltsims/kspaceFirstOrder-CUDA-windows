@@ -58,7 +58,7 @@ cufftHandle CufftComplexMatrix::sC2RFftPlan1DZ = cufftHandle();
 /**
  * Error message for the CufftComplexMatrix FFT class.
  */
-#if defined(CUDART_VERSION) && (CUDART_VERSION >= 130000)
+#if defined(CUDART_VERSION) && (CUDART_VERSION >= 13000)
 std::map<cufftResult, ErrorMessage> CufftComplexMatrix::sCufftErrorMessages{
   {CUFFT_INVALID_PLAN   , kErrFmtCufftInvalidPlan},
   {CUFFT_ALLOC_FAILED   , kErrFmtCufftAllocFailed},
