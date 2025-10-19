@@ -38,6 +38,29 @@ supported.
 
 ## Compilation
 
+### Building with CMake (Windows)
+
+The repository now ships a first-pass CMake build that mirrors the recent Linux migration. This flow targets Visual Studio or Ninja generators and requires CMake 3.24+, the NVIDIA CUDA toolkit, and the HDF5/Zlib dependencies to be discoverable (for example via `HDF5_ROOT`, `ZLIB_ROOT`, or a vcpkg toolchain file). A minimal Release build looks like:
+
+```powershell
+cmake -S . -B build `
+  -G "Visual Studio 17 2022" `
+  -DKSPACE_CPU_ARCH=avx2 `
+  -DKSPACE_CUDA_ARCH_LIST="75;80;87;89;90;90a"
+cmake --build build --config Release
+```
+
+Key cache options exposed by the new build system:
+
+- `KSPACE_CPU_ARCH` – set the preferred host ISA tuning (`native`, `avx`, `avx2`, `avx512`). MSVC currently supports `native`, `avx`, and `avx2`.
+- `KSPACE_ENABLE_OPENMP` – toggle OpenMP support (default `ON`; disable if your compiler lacks `/openmp`).
+- `KSPACE_ENABLE_FAST_MATH` – enable fast-math on both host and device compilation (default `ON`).
+- `KSPACE_CUDA_ARCH_LIST` – override the CUDA architecture list if the defaults do not match your GPU fleet.
+
+Once dependencies are resolved, the Visual Studio generator produces a solution with the familiar `Debug` and `Release` configurations, while Ninja/Makefiles use the single-config `CMAKE_BUILD_TYPE` variable.
+
+The legacy Makefile flow described below remains available while the CMake migration is validated.
+
 The source codes of `kspaceFirstOrder-CUDA` are written using the C++-11
 standard and use the NVIDIA CUDA 10.x and HDF5 1.10.x libraries. Optionally,
 the code can be compiled with the support for the OpenMP 4.0 library, however,
