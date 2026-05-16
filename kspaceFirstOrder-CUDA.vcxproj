@@ -201,7 +201,7 @@
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
       <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
-      <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;</CodeGeneration>
+      <CodeGeneration>compute_75,sm_75;compute_80,sm_80;compute_86,sm_86;compute_87,sm_87;compute_89,sm_89;compute_90,sm_90;compute_90a,sm_90a;compute_100,sm_100;compute_120,sm_120;compute_120,compute_120;</CodeGeneration>
       <FastMath>true</FastMath>
       <MaxRegCount />
       <AdditionalCompilerOptions>%(AdditionalCompilerOptions) $(CudaNvccAllowUnsupportedCompiler)</AdditionalCompilerOptions>
@@ -211,5 +211,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.targets" Condition="exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.targets')" />
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.targets" Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.targets') and exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.targets')" />
-</ImportGroup>
+  </ImportGroup>
 </Project>
