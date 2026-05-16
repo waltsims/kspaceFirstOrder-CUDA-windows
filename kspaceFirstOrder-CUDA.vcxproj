@@ -131,6 +131,7 @@
   <Target Name="VerifyCudaCustomizations" BeforeTargets="PrepareForBuild">
     <Error Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props') and !exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props')"
            Text="Neither CUDA 13.0 nor CUDA 12.2 MSBuild customizations were found under '$(VCTargetsPath)\BuildCustomizations'. Install the CUDA Toolkit (12.2 or 13.0) and ensure 'Visual Studio Integration' is selected in the installer (or copy CUDA*.props/.targets from %CUDA_PATH%\extras\visual_studio_integration\MSBuildExtensions to that path manually)." />
+  </Target>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
