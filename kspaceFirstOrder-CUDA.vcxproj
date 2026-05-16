@@ -125,6 +125,12 @@
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props" Condition="exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props')" />
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props" Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props') and exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props')" />
   </ImportGroup>
+  <!-- Fail loudly if neither CUDA version's MSBuild customizations are present.
+       Without this, both Imports above would silently skip, then later CudaCompile
+       items would fail with confusing "MSB4019: customization not found" errors. -->
+  <Target Name="VerifyCudaCustomizations" BeforeTargets="PrepareForBuild">
+    <Error Condition="!exists('$(VCTargetsPath)\BuildCustomizations\CUDA 13.0.props') and !exists('$(VCTargetsPath)\BuildCustomizations\CUDA 12.2.props')"
+           Text="Neither CUDA 13.0 nor CUDA 12.2 MSBuild customizations were found under '$(VCTargetsPath)\BuildCustomizations'. Install the CUDA Toolkit (12.2 or 13.0) and ensure 'Visual Studio Integration' is selected in the installer (or copy CUDA*.props/.targets from %CUDA_PATH%\extras\visual_studio_integration\MSBuildExtensions to that path manually)." />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -132,15 +138,33 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <!-- Resolve a vcpkg install dir from multiple sources, in order of preference:
+         1. $(VcpkgRoot)       - injected by `vcpkg integrate install` (the
+                                  recommended way; works on dev boxes that ran
+                                  the one-time integrate step)
+         2. $(VCPKG_ROOT)      - environment variable convention used by many
+                                  CI scripts (set by lukka/run-vcpkg, etc.)
+         3. $(VCPKG_INSTALLATION_ROOT) - the variable GitHub-hosted runners
+                                  expose by default for the preinstalled vcpkg
+       Resolved once here so the per-configuration paths below stay readable. -->
+  <PropertyGroup>
+    <ResolvedVcpkgRoot Condition="'$(ResolvedVcpkgRoot)' == '' and '$(VcpkgRoot)' != ''">$(VcpkgRoot)</ResolvedVcpkgRoot>
+    <ResolvedVcpkgRoot Condition="'$(ResolvedVcpkgRoot)' == '' and '$(VCPKG_ROOT)' != ''">$(VCPKG_ROOT)</ResolvedVcpkgRoot>
+    <ResolvedVcpkgRoot Condition="'$(ResolvedVcpkgRoot)' == '' and '$(VCPKG_INSTALLATION_ROOT)' != ''">$(VCPKG_INSTALLATION_ROOT)</ResolvedVcpkgRoot>
+  </PropertyGroup>
+  <Target Name="VerifyVcpkgRoot" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(ResolvedVcpkgRoot)' == ''"
+           Text="Could not locate vcpkg. Run `vcpkg integrate install` (preferred), set the VCPKG_ROOT environment variable, or rely on the GitHub-hosted-runner VCPKG_INSTALLATION_ROOT. None of those were available." />
+  </Target>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VCPKG_ROOT)\installed\x64-windows\include;.;..\Sources</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(VCPKG_ROOT)\installed\x64-windows\lib</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ResolvedVcpkgRoot)\installed\x64-windows\include;.;..\Sources</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(ResolvedVcpkgRoot)\installed\x64-windows\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VCPKG_ROOT)\installed\x64-windows\include;.;..\Sources</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(VCPKG_ROOT)\installed\x64-windows\lib</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ResolvedVcpkgRoot)\installed\x64-windows\include;.;..\Sources</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(ResolvedVcpkgRoot)\installed\x64-windows\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
